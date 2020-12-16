@@ -17,12 +17,15 @@ class CommentsController < ApplicationController
   def show
     @article = Article.find(params[:article_id])
     @comment = @article.comments.find(params[:id])
-    format.html { redirect_to  }
-    format.json { render :show, status: :created, location: @comment }
+    respond_to do |format|
+      format.html {@comment}
+      format.json {render :json=>  {:status => 200, :response=>@comment}}
+    end
   end
 
   # GET /comments/new
   def new
+    @article = Article.find(params[:article_id])
     @comment = Comment.new
   end
 
@@ -37,8 +40,8 @@ class CommentsController < ApplicationController
     @comment = @article.comments.create(comment_params)
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to article_path(@article), notice: 'Comment was successfully created.' }
-        format.json { render :show, status: :created, location: @comment }
+        format.html { redirect_to article_comments_path(@article), notice: 'Comment was successfully'}
+        format.json { render :json=>  {:status => 200, :response=>@comment }}
       else
         format.html { render :new }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
@@ -52,9 +55,9 @@ class CommentsController < ApplicationController
     @article = Article.find(params[:article_id])
     @comment = @article.comments.update(comment_params)
     respond_to do |format|
-      if @comment.update(comment_params)
-        format.html { redirect_to article_path(@article), notice: 'Comment was successfully updated.' }
-        format.json { render :show, status: :ok, location: @comment }
+      if @article.comments.update(comment_params)
+        format.html { redirect_to article_comments_path(@article), notice: 'Comment was successfully updated.' }
+        format.json { render :json=>  {:status => 200, :response=>@comment }}
       else
         format.html { render :edit }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
@@ -69,7 +72,7 @@ class CommentsController < ApplicationController
     @comment = @article.comments.find(params[:id])
     @comment.destroy
     respond_to do |format|
-      format.html { redirect_to comments_url, notice: 'Comment was successfully destroyed.' }
+      format.html { redirect_to article_comments_path(@article), notice: 'Comment was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

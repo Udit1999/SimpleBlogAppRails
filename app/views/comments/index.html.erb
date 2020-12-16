@@ -1,2 +1,17 @@
-<p id="notice"><%= notice %></p>
-<%= render "show", article: @article %>
+<h1>All Comments</h1>
+
+<ul>
+  <% @comments.each do |comment| %>
+    <p>
+    <strong>Commenter:</strong>
+    <%= comment.commenter %>
+  </p>
+
+  <p>
+    <strong>Comment:</strong>
+    <%= comment.body %>
+  </p>
+  
+<% end %>
+</ul>
+

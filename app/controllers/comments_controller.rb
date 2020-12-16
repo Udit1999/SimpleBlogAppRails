@@ -18,8 +18,9 @@ class CommentsController < ApplicationController
     @article = Article.find(params[:article_id])
     @comment = @article.comments.find(params[:id])
     respond_to do |format|
-      format.html {@comment}
       format.json {render :json=>  {:status => 200, :response=>@comment}}
+      format.html {@comment}
+      
     end
   end
 
@@ -56,8 +57,9 @@ class CommentsController < ApplicationController
     @comment = @article.comments.update(comment_params)
     respond_to do |format|
       if @article.comments.update(comment_params)
-        format.html { redirect_to article_comments_path(@article), notice: 'Comment was successfully updated.' }
         format.json { render :json=>  {:status => 200, :response=>@comment }}
+        format.html { redirect_to article_comment_path(@article), notice: 'Comment was successfully updated.' }
+        
       else
         format.html { render :edit }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
